@@ -1,0 +1,6 @@
+aws-lambda-powertools==1.18.1
+lambda-decorators==0.6.0
+requests==2.25.1
+simplejson==3.17.6
+pyparsing==3.0.1
+ulid-py==1.1.0
