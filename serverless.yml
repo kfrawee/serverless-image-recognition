@@ -1,0 +1,15 @@
+org: kfrawee
+app: image-recognition
+service: image-recognition
+
+frameworkVersion: '2 || 3'
+
+
+provider:
+  name: aws
+  runtime: python3.8
+  lambdaHashingVersion: 20201221
+
+functions:
+  hello:
+    handler: handler.hello
