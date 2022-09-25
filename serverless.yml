@@ -34,7 +34,7 @@ provider:
   versionFunctions: false
   
   environment:
-    SERVICE_NAME: ${self.service}
+    SERVICE_NAME: ${self:service}
     MAIN_BUCKET: ${self:custom.BUCKET_NAME}-${self:provider.stage}
     MAIN_TABLE: ${self:custom.TABLE_NAME}-${self:provider.stage}
   
@@ -84,22 +84,15 @@ package:
     - "!node_modules/**"
 
 functions:
-  test:
-    handler: src.handlers.blobs.index.handler
+  createBlob:
+    handler: src.handlers.blobs.index.create_blob
+    description: Generate a blob_id with a presigned url to be used to upload the image.
     layers:
-      # - arn:aws:lambda:region:${self.provider.region}:layer:Pyimage:3
       - Ref: PyimageLambdaLayer
     events:
       - http:
-          path: /test
-          method: GET  
-  # createBlob:
-  #   handler: src.handlers.create_blob.index.py
-  #   description: Generate a blob_id with a presigned url to be used to upload the image
-  #   events:
-  #     - http:
-  #         path: /images/blob/
-  #         method: POST
+          path: /blobs
+          method: POST
   
   # getLabels:
   #   handler: functions/get_labels.get_labels
@@ -117,7 +110,7 @@ functions:
 
   # labelImages:
   #   handler: src.handlers.create_blob.index.py
-  #   description: Send the uploaded image to Rekognition to detect labels
+  #   description: Send the uploaded image to Rekognition to detect labels.
   #   events:
   #     - s3:
   #         bucket: ${self:provider.environment.BUCKET_NAME}
@@ -140,31 +133,38 @@ functions:
   #             - StreamArn
 
 
-# resources:
-#   Parameters:
-#     ServiceName:
-#       Type: String
-#       Default: ${self.service}
+resources:
+  Resources:
+    MainBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:provider.environment.MAIN_BUCKET}
+        BucketEncryption:
+          ServerSideEncryptionConfiguration:
+            - ServerSideEncryptionByDefault:
+                SSEAlgorithm: AES256
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: true
+          BlockPublicPolicy: true
+          IgnorePublicAcls: true
+          RestrictPublicBuckets: true
 
-
-#   Resources:
-#     MainBucket:
-#       Type: AWS::S3::Bucket
-#       Properties:
-#         BucketName: ${self:provider.environment.BUCKET_NAME}
-
-#     MasterTable:
-#       Type: AWS::DynamoDB::Table
-#       Properties:
-#         AttributeDefinitions:
-#           - AttributeName: blob_id
-#             AttributeType: S
-#         KeySchema:
-#           - AttributeName: blob_id
-#             KeyType: HASH
-#         ProvisionedThroughput:
-#           ReadCapacityUnits: 1
-#           WriteCapacityUnits: 1
-#         StreamSpecification:
-#           StreamViewType: NEW_AND_OLD_IMAGES
-#         TableName: ${self:provider.environment.MASTER_TABLE}
+    MainTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.MAIN_TABLE}
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: sk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+          - AttributeName: sk
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+        PointInTimeRecoverySpecification:
+          PointInTimeRecoveryEnabled: true
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
