@@ -6,13 +6,14 @@ Handler for blobs CRUDS (post and get) operations.
 
 import json
 from http import HTTPStatus
+import ulid
+
+from pyimage.utils.decorators import lambda_decorator
 
 
-from pyimage.test import test_layer_functions
-
-
+@lambda_decorator
 def handler(event, _):
     return {
         "statusCode": HTTPStatus.OK,
-        "body": json.dumps({"message": test_layer_functions()}),
+        "body": {"message": str(ulid.new())},
     }
