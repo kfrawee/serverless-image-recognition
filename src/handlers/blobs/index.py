@@ -12,9 +12,4 @@ from lambda_layer.test import test_layer_functions
 
 
 def handler(event, _):
-    return {
-        "statusCode": HTTPStatus.OK,
-        "Body": {
-            "message": test_layer_functions()
-        }
-    }
+    return {"statusCode": HTTPStatus.OK, "Body": {"message": test_layer_functions()}}
