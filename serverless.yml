@@ -7,20 +7,18 @@ frameworkVersion: "2 || 3"
 
 
 layers:
-  lambda_layer:
-    path: layers/lambda_layer
+  pyimage:
+    path: layers/pyimage
     description: |
       Lambda layer contains helper functions for aws services 
       and other common functions to avoid repeating the code.
     compatibleRuntimes:
       - python3.8
-    compatibleArchitectures:
-      - x86_64
 
 custom:
   pythonRequirements:
     dockerizePip: non-linux
-  BUCKET_NAME: ${self:service}-bucket # custom variables to be used within the serverless.yml 
+  BUCKET_NAME: ${self:service}-bucket # custom variables to be used within the serverless.yml
   TABLE_NAME: ${self:service}-table
 
 
@@ -36,52 +34,59 @@ provider:
     MAIN_BUCKET: ${self:custom.BUCKET_NAME}-${self:provider.stage}
     MAIN_TABLE: ${self:custom.TABLE_NAME}-${self:provider.stage}
   
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - "s3:PutObject"
-        - "s3:GetObject"
-        - "s3:DeleteObject"
-      # Resource:
-      #   Fn::Join:
-      #     - ""
-      #     - - "arn:aws:s3:::"
-      #       - "Ref": "MainBucket"
-      #       - "/*"
-    - Effect: Allow
-      Action:
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-        - dynamodb:Query
-        - dynamodb:Scan
-      # Resource:
-      #   - "#{MainTable.Arn}"
-      #   - "#{MainTable.StreamArn}"
-    - Effect: Allow
-      Action:
-        - "rekognition:DetectLabels"
-      Resource: "*"
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "s3:PutObject"
+            - "s3:GetObject"
+            - "s3:DeleteObject"
+          Resource: "*"
+          # Resource:
+          #   Fn::Join:
+          #     - ""
+          #     - - "arn:aws:s3:::"
+          #       - "Ref": "MainBucket"
+          #       - "/*"
+        - Effect: "Allow"
+          Action:
+            - "dynamodb:GetItem"
+            - "dynamodb:PutItem"
+            - "dynamodb:UpdateItem"
+            - "dynamodb:DeleteItem"
+            - "dynamodb:Query"
+            - "dynamodb:Scan"
+          Resource: "*"
+          # Resource:
+          #   - "#{MainTable.Arn}"
+          #   - "#{MainTable.StreamArn}"
+        - Effect: "Allow"
+          Action:
+            - "rekognition:DetectLabels"
+          Resource: "*"
   
   stackTags:
     "name" : ${self:service}
 
 package:
-  exclude:
-    - requirements/**
-    - state_machines/**
-    - test/**
-    - README.md
-    - requirements.txt
+  patterns:
+    - "!requirements/**"
+    - "!state_machines/**"
+    - "!test/**"
+    - "!README.md"
+    - "!requirements.txt"
 
 functions:
   test:
     handler: src.handlers.blobs.index.handler
+    layers:
+      # - arn:aws:lambda:region:${self.provider.region}:layer:Pyimage:3
+      - Ref: PyimageLambdaLayer
     events:
       - http:
           path: /test
-          method: GET
+          method: GET  
   # createBlob:
   #   handler: src.handlers.create_blob.index.py
   #   description: Generate a blob_id with a presigned url to be used to upload the image
@@ -157,4 +162,3 @@ functions:
 #         StreamSpecification:
 #           StreamViewType: NEW_AND_OLD_IMAGES
 #         TableName: ${self:provider.environment.MASTER_TABLE}
-    
