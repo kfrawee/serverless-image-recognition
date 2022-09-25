@@ -1,4 +1,4 @@
-aws-lambda-powertools==1.18.1
+aws-lambda-powertools==1.29.2
 lambda-decorators==0.6.0
 requests==2.25.1
 simplejson==3.17.6
