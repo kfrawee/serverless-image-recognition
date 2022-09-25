@@ -43,7 +43,9 @@ def create_blob(event, _):
 
     now = datetime.now()
     blob_id = ulid.from_timestamp(now)
-    upload_url = "https://www.example.com/upload"  # from s3 helpers, create a pre-signed url
+    upload_url = (
+        "https://www.example.com/upload"  # from s3 helpers, create a pre-signed url
+    )
 
     response_body = {"blob_id": blob_id, "create_on": now, "upload_url": upload_url}
     if callback_url := clear_data.get("callback_url"):
