@@ -6,6 +6,9 @@ service: image-recognition
 frameworkVersion: "2 || 3"
 
 
+plugins:
+  - "serverless-python-requirements"
+
 layers:
   pyimage:
     path: layers/pyimage
@@ -31,6 +34,7 @@ provider:
   versionFunctions: false
   
   environment:
+    SERVICE_NAME: ${self.service}
     MAIN_BUCKET: ${self:custom.BUCKET_NAME}-${self:provider.stage}
     MAIN_TABLE: ${self:custom.TABLE_NAME}-${self:provider.stage}
   
@@ -70,12 +74,14 @@ provider:
     "name" : ${self:service}
 
 package:
+  excludeDevDependencies: true
   patterns:
     - "!requirements/**"
     - "!state_machines/**"
     - "!test/**"
     - "!README.md"
     - "!requirements.txt"
+    - "!node_modules/**"
 
 functions:
   test:
