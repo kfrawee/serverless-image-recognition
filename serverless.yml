@@ -2,14 +2,159 @@ org: kfrawee
 app: image-recognition
 service: image-recognition
 
-frameworkVersion: '2 || 3'
+
+frameworkVersion: "2 || 3"
+
+
+layers:
+  lambda_layer:
+    path: layers/lambda_layer
+    description: |
+      Lambda layer contains helper functions for aws services 
+      and other common functions to avoid repeating the code.
+    compatibleRuntimes:
+      - python3.8
+    compatibleArchitectures:
+      - x86_64
+
+custom:
+  pythonRequirements:
+    dockerizePip: non-linux
+  BUCKET_NAME: ${self:service}-bucket # custom variables to be used within the serverless.yml 
+  TABLE_NAME: ${self:service}-table
 
 
 provider:
   name: aws
   runtime: python3.8
-  lambdaHashingVersion: 20201221
+  region: ${opt:region, 'us-east-1'}
+  stage: ${opt:stage, 'dev'}
+  timeout: 29 # APIGW timeout to be used for all the sync endpoints
+  versionFunctions: false
+  
+  environment:
+    MAIN_BUCKET: ${self:custom.BUCKET_NAME}-${self:provider.stage}
+    MAIN_TABLE: ${self:custom.TABLE_NAME}-${self:provider.stage}
+  
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - "s3:PutObject"
+        - "s3:GetObject"
+        - "s3:DeleteObject"
+      # Resource:
+      #   Fn::Join:
+      #     - ""
+      #     - - "arn:aws:s3:::"
+      #       - "Ref": "MainBucket"
+      #       - "/*"
+    - Effect: Allow
+      Action:
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:Query
+        - dynamodb:Scan
+      # Resource:
+      #   - "#{MainTable.Arn}"
+      #   - "#{MainTable.StreamArn}"
+    - Effect: Allow
+      Action:
+        - "rekognition:DetectLabels"
+      Resource: "*"
+  
+  stackTags:
+    "name" : ${self:service}
+
+package:
+  exclude:
+    - requirements/**
+    - state_machines/**
+    - test/**
+    - README.md
+    - requirements.txt
 
 functions:
-  hello:
-    handler: handler.hello
+  test:
+    handler: src.handlers.blobs.index.handler
+    events:
+      - http:
+          path: /test
+          method: GET
+  # createBlob:
+  #   handler: src.handlers.create_blob.index.py
+  #   description: Generate a blob_id with a presigned url to be used to upload the image
+  #   events:
+  #     - http:
+  #         path: /images/blob/
+  #         method: POST
+  
+  # getLabels:
+  #   handler: functions/get_labels.get_labels
+  #   description: Get labels by blob id
+  #   events:
+  #     - http:
+  #         path: /images/blobs/{blob_id}
+  #         method: get
+  #         cors: true
+  #         integration: lambda
+  #         request:
+  #           parameters:
+  #             paths:
+  #               blob_id: true
+
+  # labelImages:
+  #   handler: src.handlers.create_blob.index.py
+  #   description: Send the uploaded image to Rekognition to detect labels
+  #   events:
+  #     - s3:
+  #         bucket: ${self:provider.environment.BUCKET_NAME}
+  #         event: s3:ObjectCreated:Put
+  #         existing: true
+
+  # callback:
+  #   handler: functions/callback.callback
+  #   description: Send detected labels to callback url
+  #   dependsOn:
+  #     - MasterTable
+  #   events:
+  #     - stream:
+  #         type: dynamodb
+  #         batchSize: 100
+  #         enabled: true
+  #         arn:
+  #           Fn::GetAtt:
+  #             - MasterTable
+  #             - StreamArn
+
+
+# resources:
+#   Parameters:
+#     ServiceName:
+#       Type: String
+#       Default: ${self.service}
+
+
+#   Resources:
+#     MainBucket:
+#       Type: AWS::S3::Bucket
+#       Properties:
+#         BucketName: ${self:provider.environment.BUCKET_NAME}
+
+#     MasterTable:
+#       Type: AWS::DynamoDB::Table
+#       Properties:
+#         AttributeDefinitions:
+#           - AttributeName: blob_id
+#             AttributeType: S
+#         KeySchema:
+#           - AttributeName: blob_id
+#             KeyType: HASH
+#         ProvisionedThroughput:
+#           ReadCapacityUnits: 1
+#           WriteCapacityUnits: 1
+#         StreamSpecification:
+#           StreamViewType: NEW_AND_OLD_IMAGES
+#         TableName: ${self:provider.environment.MASTER_TABLE}
+    
