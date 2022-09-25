@@ -12,4 +12,7 @@ from pyimage.test import test_layer_functions
 
 
 def handler(event, _):
-    return {"statusCode": HTTPStatus.OK, "body": json.dumps({"message": test_layer_functions()})}
+    return {
+        "statusCode": HTTPStatus.OK,
+        "body": json.dumps({"message": test_layer_functions()}),
+    }
