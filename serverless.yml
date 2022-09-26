@@ -46,7 +46,7 @@ provider:
             - "s3:PutObject"
             - "s3:GetObject"
             - "s3:DeleteObject"
-          Resource: "*"
+          Resource: "*" # TODO: UPDATE RESOURCES
           # Resource:
           #   Fn::Join:
           #     - ""
@@ -61,14 +61,14 @@ provider:
             - "dynamodb:DeleteItem"
             - "dynamodb:Query"
             - "dynamodb:Scan"
-          Resource: "*"
+          Resource: "*" # TODO: UPDATE RESOURCES
           # Resource:
           #   - "#{MainTable.Arn}"
           #   - "#{MainTable.StreamArn}"
         - Effect: "Allow"
           Action:
             - "rekognition:DetectLabels"
-          Resource: "*"
+          Resource: "*" 
   
   stackTags:
     "name" : ${self:service}
@@ -93,20 +93,15 @@ functions:
       - http:
           path: /blobs
           method: POST
-  
-  # getLabels:
-  #   handler: functions/get_labels.get_labels
-  #   description: Get labels by blob id
-  #   events:
-  #     - http:
-  #         path: /images/blobs/{blob_id}
-  #         method: get
-  #         cors: true
-  #         integration: lambda
-  #         request:
-  #           parameters:
-  #             paths:
-  #               blob_id: true
+  getBlob:
+    handler: src.handlers.blobs.index.get_blob
+    description: Get blob labeling status.
+    layers:
+      - Ref: PyimageLambdaLayer
+    events:
+      - http:
+          path: /blobs/{blob_id}
+          method: GET
 
   # labelImages:
   #   handler: src.handlers.create_blob.index.py
