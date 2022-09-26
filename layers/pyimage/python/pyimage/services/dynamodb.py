@@ -31,7 +31,7 @@ class MainTable:
     ):
         pass
 
-    def get_invocation(self, blob_id:str):
+    def get_invocation(self, blob_id: str):
         pass
 
     def update_invocation(self, blob_id, **updated_data):
