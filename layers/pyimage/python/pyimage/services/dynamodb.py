@@ -29,10 +29,19 @@ class MainTable:
         finished_on=None,
         **data
     ):
-        pass
+        item = {
+            "pk": blob_id,
+            "sk": blob_id,
+            "invocation_status": invocation_status,
+            "started_on": started_on,
+            "finished_on": finished_on,
+            **data,
+        }
+
+        self._table.put_item(Item=item)
 
     def get_invocation(self, blob_id: str):
-        pass
+        return self._table.get_item(Key={"pk": blob_id, "sk": blob_id}).get("Item", {})
 
     def update_invocation(self, blob_id, **updated_data):
         pass
