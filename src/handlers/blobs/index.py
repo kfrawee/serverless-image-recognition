@@ -56,7 +56,7 @@ def create_blob(event, _):
         "created_on": now,
         "upload_url": upload_url,
         "_links": {
-            "invocation_status": f"https://{event.get('requestContext').get('domainName')}/"
+            "labeling_status": f"https://{event.get('requestContext').get('domainName')}/"
             f"{event.get('requestContext').get('stage')}/blobs/{blob_id}",
         },
     }
