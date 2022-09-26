@@ -46,7 +46,7 @@ provider:
             - "s3:PutObject"
             - "s3:GetObject"
             - "s3:DeleteObject"
-          Resource: "*"
+          Resource: "*" # TODO: UPDATE RESOURCES
           # Resource:
           #   Fn::Join:
           #     - ""
@@ -61,14 +61,14 @@ provider:
             - "dynamodb:DeleteItem"
             - "dynamodb:Query"
             - "dynamodb:Scan"
-          Resource: "*"
+          Resource: "*" # TODO: UPDATE RESOURCES
           # Resource:
           #   - "#{MainTable.Arn}"
           #   - "#{MainTable.StreamArn}"
         - Effect: "Allow"
           Action:
             - "rekognition:DetectLabels"
-          Resource: "*"
+          Resource: "*" 
   
   stackTags:
     "name" : ${self:service}

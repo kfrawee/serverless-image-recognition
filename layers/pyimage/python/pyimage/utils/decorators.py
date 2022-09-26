@@ -4,15 +4,11 @@ REFERENCES:
 https://github.com/dschep/lambda-decorators/blob/master/lambda_decorators.py
 """
 
+import json
 from functools import wraps
 from http import HTTPStatus
 from json import JSONDecodeError
 import traceback
-
-try:
-    import simplejson as json
-except ImportError:
-    import json
 
 from lambda_decorators import cors_headers
 
@@ -41,10 +37,10 @@ def dump_json_body_and_catch_unexpected_errors(
                         )
                     return response
                 except Exception:
-                    logger.error(f"Unexpected error: {traceback.format_exc()}")
+                    logger.error(f"Something went wrong: {traceback.format_exc()}")
                     return {
                         "statusCode": HTTPStatus.INTERNAL_SERVER_ERROR,
-                        "body": json.dumps({"message": "Internal server error"}),
+                        "body": json.dumps({"message": "Internal Server Error"}),
                     }
 
             return wrapper
@@ -64,6 +60,7 @@ def load_json_body(handler_or_none=None, **json_loads_kwargs):
         def wrapper_wrapper(handler):
             @wraps(handler)
             def wrapper(event, context):
+                logger.debug(event)
                 if isinstance(event.get("body"), str):
                     try:
                         loaded_body = json.loads(event["body"], **json_loads_kwargs)
@@ -74,14 +71,12 @@ def load_json_body(handler_or_none=None, **json_loads_kwargs):
                         response = {
                             "statusCode": HTTPStatus.BAD_REQUEST,
                             "body": json.dumps(
-                                {"message": "Request body is invalid JSON."}
+                                {"message": "Request body is not a valid JSON."}
                             ),
                         }
                         return response
 
                     event["body"] = loaded_body
-
-                logger.debug(event)
 
                 return handler(event, context)
 
@@ -97,16 +92,21 @@ def lambda_decorator(handler_func):
         @wraps(handler)
         @logger.inject_lambda_context
         def wrapper(event, context):
-            body = event.get("body")
+            if body := event.get("body"):
+                try:
+                    body = json.loads(body)
+                except JSONDecodeError:
+                    response = {
+                        "statusCode": HTTPStatus.BAD_REQUEST,
+                        "body": json.dumps(
+                            {"message": "Request body is not a valid JSON."}
+                        ),
+                    }
+            else:
+                response = cors_headers(
+                    dump_json_body_and_catch_unexpected_errors(load_json_body(handler))
+                )(event, context)
 
-            try:
-                body = json.loads(body)
-            except (JSONDecodeError, TypeError):
-                pass
-
-            response = cors_headers(
-                dump_json_body_and_catch_unexpected_errors(load_json_body(handler))
-            )(event, context)
             if headers := response.get("headers"):
                 headers[
                     "Strict-Transport-Security"
@@ -115,6 +115,7 @@ def lambda_decorator(handler_func):
                 response["headers"] = {
                     "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload"
                 }
+
             return response
 
         return wrapper
