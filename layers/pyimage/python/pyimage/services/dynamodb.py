@@ -26,7 +26,7 @@ class MainTable:
         blob_id: str,
         invocation_status: InvocationStatus,
         started_on=str(datetime.now()),
-        finished_on=None,
+        completed_on=None,
         **data
     ):
         item = {
@@ -34,7 +34,7 @@ class MainTable:
             "sk": blob_id,
             "invocation_status": invocation_status,
             "started_on": started_on,
-            "finished_on": finished_on,
+            "completed_on": completed_on,
             **data,
         }
 
