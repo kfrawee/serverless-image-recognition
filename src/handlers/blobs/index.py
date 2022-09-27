@@ -97,3 +97,19 @@ def get_blob(event, _):
             "statusCode": HTTPStatus.NOT_FOUND,
             "body": {"message": f"Invocation with blob_id '{blob_id}' was not found."},
         }
+
+    invocation_status = invocation.get("invocation_status")
+
+    # if invocation_status not in ["COMPLETED", "FAILED"]:
+
+    response_body = {
+        "blob_id": blob_id,
+        "invocation_status": invocation_status,
+        "started_on": invocation.get("started_on"),
+        "completed_on": invocation.get("completed_on"),
+    }
+
+    return {
+        "statusCode": HTTPStatus.OK,
+        "body": create_or_get_blob_response_schema.dump(response_body),
+    }

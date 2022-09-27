@@ -15,7 +15,7 @@ class CreateOrGetBlobResponseSchema(Schema):
     failure_reason = fields.String()
 
     started_on = fields.String()
-    finished_on = fields.String()
+    completed_on = fields.String()
 
     labels = fields.List(fields.String())
 
