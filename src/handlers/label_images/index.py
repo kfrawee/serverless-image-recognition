@@ -33,16 +33,14 @@ def handler(event, _):
     labels = label_image(image_key)
 
     if labels:
-        print("#" * 10)
-        print(type(labels))
-        print("#" * 10)
-        print(labels)
-        print("#" * 10)
+        # TODO: update the table with COMPLETED and labels
+        # main_table.update_invocation()
+        pass
 
     else:
         pass
         # TODO: update the table with FAILED
 
     # delete the uploaded object, no need to keep it in s3
-    delete_object(image_key)
+    # delete_object(image_key)
     return {}
