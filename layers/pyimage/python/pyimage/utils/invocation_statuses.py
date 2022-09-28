@@ -8,5 +8,6 @@ class InvocationStatus(Enum):
     RUNNING = "RUNNING"
     IN_PROGRESS = "IN_PROGRESS"
     COMPLETED = "COMPLETED"
+    ACTION_REQUIRED = "ACTION_REQUIRED"
     ERROR = "ERROR"
     FAILED = "FAILED"
