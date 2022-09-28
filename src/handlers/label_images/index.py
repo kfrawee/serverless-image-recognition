@@ -29,12 +29,15 @@ def handler(event, _):
         dict: empty dict
     """
 
-    image_key = event.get("Records", {}).get("s3", {}).get("object", {}).get("key")
+    image_key = event.get("Records", [])[0].get("s3", {}).get("object", {}).get("key")
     labels = label_image(image_key)
 
     if labels:
-        logger.debug("labels", labels)
-        # TODO: update table with the results
+        print("#" * 10)
+        print(type(labels))
+        print("#" * 10)
+        print(labels)
+        print("#" * 10)
 
     else:
         pass

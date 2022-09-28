@@ -103,7 +103,7 @@ functions:
           path: /blobs/{blob_id}
           method: GET
 
-  labelImages:
+  labelImage:
     handler: src.handlers.label_images.index.handler
     description: Send the uploaded image to Rekognition to detect labels.
     layers:
