@@ -103,14 +103,16 @@ functions:
           path: /blobs/{blob_id}
           method: GET
 
-  # labelImages:
-  #   handler: src.handlers.create_blob.index.py
-  #   description: Send the uploaded image to Rekognition to detect labels.
-  #   events:
-  #     - s3:
-  #         bucket: ${self:provider.environment.BUCKET_NAME}
-  #         event: s3:ObjectCreated:Put
-  #         existing: true
+  labelImages:
+    handler: src.handlers.label_images.index.handler
+    description: Send the uploaded image to Rekognition to detect labels.
+    layers:
+      - Ref: PyimageLambdaLayer
+    events:
+      - s3:
+          bucket: ${self:provider.environment.MAIN_BUCKET}
+          event: s3:ObjectCreated:Put
+          existing: true
 
   # callback:
   #   handler: functions/callback.callback

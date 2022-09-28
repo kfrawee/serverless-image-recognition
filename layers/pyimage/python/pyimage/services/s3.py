@@ -35,3 +35,7 @@ def generate_presigned_url(blob_id: str, Bucket=MAIN_BUCKET, expiration=60 * 60)
         return None
 
     return presigned_url
+
+
+def delete_object(blob_id: str):
+    pass

@@ -5,4 +5,5 @@ simplejson==3.17.6
 pyparsing==3.0.1
 ulid-py==1.1.0
 marshmallow==3.18.0
-marshmallow-union== 0.1.15.post1
+marshmallow-union==0.1.15.post1
+pytest== 7.1.3
