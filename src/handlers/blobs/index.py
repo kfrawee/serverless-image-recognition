@@ -4,9 +4,8 @@ Handler for blobs CRUDS (post and get) operations.
     - get_blob
 """
 
-import json
 from http import HTTPStatus
-from datetime import datetime
+from datetime import datetime, timezone
 import ulid
 
 from marshmallow import ValidationError
@@ -48,7 +47,7 @@ def create_blob(event, _):
         }
 
     invocation_status = InvocationStatus.STARTED.value
-    now = datetime.now()
+    now = datetime.now(timezone.utc)
     blob_id = str(ulid.from_timestamp(now))
     upload_url = generate_presigned_url(blob_id)
 
