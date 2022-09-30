@@ -9,7 +9,10 @@ from pyimage.utils.helpers import logger
 
 from pyimage.services.dynamodb import MainTable
 from pyimage.utils.helpers import send_callback
+from pyimage.utils.invocation_statuses import InvocationStatus
+from pyimage.utils.error_messages import INVALID_IMAGE_FORMAT
 from pyimage.utils.schemas import CreateOrGetBlobResponseSchema
+
 
 main_table = MainTable()
 create_or_get_blob_response_schema = CreateOrGetBlobResponseSchema()
@@ -32,9 +35,15 @@ def handler(event, _):
 
     try:
         invocation_status = invocation.get("invocation_status")
-        callback_data = create_or_get_blob_response_schema.dump(invocation)
+        callback_data = {
+            "blob_id": blob_id,
+            **create_or_get_blob_response_schema.dump(invocation),
+        }
 
-        response = send_callback(callback_url, callback_data)
+        if invocation_status == InvocationStatus.FAILED.value:
+            callback_data.update(failure_reason=INVALID_IMAGE_FORMAT)
+
+        send_callback(callback_url, callback_data)
     except (HTTPError, ConnectionError, ConnectTimeout) as e:
         logger.error(f"Sending request to '{callback_url}' failed: '{e}'.")
     return {}

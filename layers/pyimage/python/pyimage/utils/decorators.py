@@ -37,10 +37,10 @@ def dump_json_body_and_catch_unexpected_errors(
                         )
                     return response
                 except Exception:
-                    logger.error(f"Something went wrong: {traceback.format_exc()}")
+                    logger.error(f"Unexpected Error: {traceback.format_exc()}")
                     return {
                         "statusCode": HTTPStatus.INTERNAL_SERVER_ERROR,
-                        "body": json.dumps({"message": "Internal Server Error"}),
+                        "body": json.dumps({"message": "Internal server error"}),
                     }
 
             return wrapper
