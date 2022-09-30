@@ -47,9 +47,9 @@ def create_blob(event, _):
             "body": {"message": f"Invalid request body: {e.normalized_messages()}"},
         }
 
-    invocation_status = InvocationStatus.STARTED.value
     now = datetime.now(timezone.utc)
     blob_id = str(ulid.from_timestamp(now))
+    invocation_status = InvocationStatus.ACTION_REQUIRED.value
     upload_url = generate_presigned_url(blob_id)
 
     main_table.put_invocation(
@@ -60,12 +60,12 @@ def create_blob(event, _):
     )
 
     response_body = {
-        "invocation_status": invocation_status,
         "blob_id": blob_id,
+        "invocation_status": invocation_status,
         "started_on": now,
         "upload_url": upload_url,
         "_links": {
-            "labeling_status": f"https://{event.get('requestContext').get('domainName')}/"
+            "status": f"https://{event.get('requestContext').get('domainName')}/"
             f"{event.get('requestContext').get('stage')}/blobs/{blob_id}",
         },
     }
