@@ -1,8 +1,8 @@
 """
-Handler for label image once it is uploaded to s3
+Handler for labeling image once it is uploaded to s3
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 from pyimage.utils.decorators import lambda_decorator
@@ -30,17 +30,31 @@ def handler(event, _):
     """
 
     image_key = event.get("Records", [])[0].get("s3", {}).get("object", {}).get("key")
+    blob_id = image_key.split("/")[-1]
+
+    main_table.update_invocation(
+        blob_id=blob_id,
+        invocation_status=InvocationStatus.IN_PROGRESS.value,
+    )
+
     labels = label_image(image_key)
+    now = datetime.now(timezone.utc)
 
     if labels:
-        # TODO: update the table with COMPLETED and labels
-        # main_table.update_invocation()
-        pass
+        main_table.update_invocation(
+            blob_id=blob_id,
+            invocation_status=InvocationStatus.COMPLETED.value,
+            completed_on=str(now),
+            labels=labels,
+        )
 
     else:
-        pass
-        # TODO: update the table with FAILED
+        main_table.update_invocation(
+            blob_id=blob_id,
+            invocation_status=InvocationStatus.FAILED.value,
+            completed_on=str(now),
+        )
 
     # delete the uploaded object, no need to keep it in s3
-    # delete_object(image_key)
+    delete_object(image_key)
     return {}

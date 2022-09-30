@@ -20,7 +20,7 @@ MAIN_BUCKET = os.getenv("MAIN_BUCKET")
 MAIN_DIR = "blobs"
 
 
-def generate_presigned_url(blob_id: str, Bucket=MAIN_BUCKET, expiration=60 * 60) -> str:
+def generate_presigned_url(blob_id: str, Bucket=MAIN_BUCKET, expiration=60 * 10) -> str:
     """Generate presigned url for image upload"""
     try:
         blob_key = f"{MAIN_DIR}/{blob_id}/{blob_id}"
@@ -37,5 +37,6 @@ def generate_presigned_url(blob_id: str, Bucket=MAIN_BUCKET, expiration=60 * 60)
     return presigned_url
 
 
-def delete_object(blob_id: str):
-    pass
+def delete_object(object_key: str):
+    s3_client.delete_object(Bucket=MAIN_BUCKET, Key=object_key)
+    return
