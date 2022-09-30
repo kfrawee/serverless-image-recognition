@@ -20,6 +20,15 @@ create_or_get_blob_response_schema = CreateOrGetBlobResponseSchema()
 
 @lambda_decorator
 def handler(event, _):
+    """Handles sending callback updates.
+
+    Args:
+        event (dict): Invocation information for the lambda handler.
+        _ (dict): Unused context information for the lambda handler.
+
+    Returns:
+        dict: empty dict
+    """
 
     blob_id = (
         event.get("Records", [])[0]
@@ -34,16 +43,18 @@ def handler(event, _):
         return {}
 
     try:
-        invocation_status = invocation.get("invocation_status")
-        callback_data = {
+        callback_payload = {
             "blob_id": blob_id,
-            **create_or_get_blob_response_schema.dump(invocation),
+            **invocation,
         }
 
+        invocation_status = invocation.get("invocation_status")
         if invocation_status == InvocationStatus.FAILED.value:
-            callback_data.update(failure_reason=INVALID_IMAGE_FORMAT)
+            callback_payload.update(failure_reason=INVALID_IMAGE_FORMAT)
 
-        send_callback(callback_url, callback_data)
+        send_callback(
+            callback_url, create_or_get_blob_response_schema.dump(callback_payload)
+        )
     except (HTTPError, ConnectionError, ConnectTimeout) as e:
         logger.error(f"Sending request to '{callback_url}' failed: '{e}'.")
     return {}

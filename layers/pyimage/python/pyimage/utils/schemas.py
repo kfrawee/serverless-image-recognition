@@ -14,6 +14,7 @@ class CreateOrGetBlobResponseSchema(Schema):
     invocation_status = fields.String()
     failure_reason = fields.String()
 
+    requested_on = fields.String()
     started_on = fields.String()
     completed_on = fields.String()
 

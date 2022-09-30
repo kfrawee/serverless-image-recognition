@@ -55,14 +55,14 @@ def create_blob(event, _):
     main_table.put_invocation(
         blob_id=blob_id,
         invocation_status=invocation_status,
-        started_on=str(now),
+        requested_on=str(now),
         **clear_data,
     )
 
     response_body = {
         "blob_id": blob_id,
         "invocation_status": invocation_status,
-        "started_on": now,
+        "requested_on": now,
         "upload_url": upload_url,
         "_links": {
             "status": f"https://{event.get('requestContext').get('domainName')}/"
