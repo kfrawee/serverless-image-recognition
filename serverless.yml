@@ -2,9 +2,7 @@ org: kfrawee
 app: image-recognition
 service: image-recognition
 
-
 frameworkVersion: "2 || 3"
-
 
 plugins:
   - "serverless-python-requirements"
@@ -21,23 +19,22 @@ layers:
 custom:
   pythonRequirements:
     dockerizePip: non-linux
-  BUCKET_NAME: ${self:service}-bucket # custom variables to be used within the serverless.yml
+  BUCKET_NAME: ${self:service}-bucket
   TABLE_NAME: ${self:service}-table
-
 
 provider:
   name: aws
   runtime: python3.8
   region: ${opt:region, 'us-east-1'}
   stage: ${opt:stage, 'dev'}
-  timeout: 29 # APIGW timeout to be used for all the sync endpoints
+  timeout: 29
   versionFunctions: false
-  
+
   environment:
     SERVICE_NAME: ${self:service}
     MAIN_BUCKET: ${self:custom.BUCKET_NAME}-${self:provider.stage}
     MAIN_TABLE: ${self:custom.TABLE_NAME}-${self:provider.stage}
-  
+
   iam:
     role:
       statements:
@@ -46,13 +43,12 @@ provider:
             - "s3:PutObject"
             - "s3:GetObject"
             - "s3:DeleteObject"
-          Resource: "*" # TODO: UPDATE RESOURCES
-          # Resource:
-          #   Fn::Join:
-          #     - ""
-          #     - - "arn:aws:s3:::"
-          #       - "Ref": "MainBucket"
-          #       - "/*"
+          Resource:
+            Fn::Join:
+            - ""
+            - - "arn:aws:s3:::"
+              - "Ref": "MainBucket"
+              - "/*"
         - Effect: "Allow"
           Action:
             - "dynamodb:GetItem"
@@ -61,17 +57,20 @@ provider:
             - "dynamodb:DeleteItem"
             - "dynamodb:Query"
             - "dynamodb:Scan"
-          Resource: "*" # TODO: UPDATE RESOURCES
-          # Resource:
-          #   - "#{MainTable.Arn}"
-          #   - "#{MainTable.StreamArn}"
+          Resource:
+            - Fn::GetAtt: 
+              - MainTable
+              - Arn
+            - Fn::GetAtt: 
+              - MainTable
+              - StreamArn
         - Effect: "Allow"
           Action:
             - "rekognition:DetectLabels"
-          Resource: "*" 
-  
+          Resource: "*"
+
   stackTags:
-    "name" : ${self:service}
+    "name": ${self:service}
 
 package:
   excludeDevDependencies: true
@@ -93,6 +92,7 @@ functions:
       - http:
           path: /blobs
           method: POST
+  
   getBlob:
     handler: src.handlers.blobs.index.get_blob
     description: Get blob labeling status.
@@ -114,21 +114,20 @@ functions:
           event: s3:ObjectCreated:Put
           existing: true
 
-  # callback:
-  #   handler: functions/callback.callback
-  #   description: Send detected labels to callback url
-  #   dependsOn:
-  #     - MasterTable
-  #   events:
-  #     - stream:
-  #         type: dynamodb
-  #         batchSize: 100
-  #         enabled: true
-  #         arn:
-  #           Fn::GetAtt:
-  #             - MasterTable
-  #             - StreamArn
-
+  callback:
+    handler: src.handlers.callback.index.handler
+    description: Send labels to callback url if provided.
+    layers:
+      - Ref: PyimageLambdaLayer
+    events:
+      - stream:
+          type: dynamodb
+          batchSize: 1
+          enabled: true
+          arn:
+            Fn::GetAtt:
+              - MainTable
+              - StreamArn
 
 resources:
   Resources:

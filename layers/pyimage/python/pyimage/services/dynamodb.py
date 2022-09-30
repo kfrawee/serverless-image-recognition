@@ -7,12 +7,9 @@ import logging
 from datetime import datetime
 
 import boto3
-from botocore.exceptions import ClientError
-from boto3.dynamodb.conditions import Key, Attr
-from boto3.dynamodb.types import TypeDeserializer
 
 from ..utils.invocation_statuses import InvocationStatus
-from .constants import DYNAMODB_RESERVED_WORDS
+from ..utils.constants import DYNAMODB_RESERVED_WORDS
 
 MAIN_TABLE = os.getenv("MAIN_TABLE")
 dynamodb_client = boto3.resource("dynamodb")

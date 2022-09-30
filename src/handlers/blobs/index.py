@@ -9,11 +9,12 @@ from datetime import datetime, timezone
 import ulid
 
 from marshmallow import ValidationError
-from .schemas import CreateBlobRequestSchema, CreateOrGetBlobResponseSchema
 
 from pyimage.utils.decorators import lambda_decorator
-from pyimage.utils.invocation_statuses import InvocationStatus
 from pyimage.utils.helpers import logger
+from pyimage.utils.invocation_statuses import InvocationStatus
+from pyimage.utils.schemas import CreateBlobRequestSchema, CreateOrGetBlobResponseSchema
+from pyimage.utils.error_messages import INVALID_IMAGE_FORMAT
 
 from pyimage.services.s3 import generate_presigned_url
 from pyimage.services.dynamodb import MainTable
@@ -99,14 +100,10 @@ def get_blob(event, _):
 
     invocation_status = invocation.get("invocation_status")
 
-    # if invocation_status not in ["COMPLETED", "FAILED"]:
+    response_body = {"blob_id": blob_id, **invocation}
 
-    response_body = {
-        "blob_id": blob_id,
-        "invocation_status": invocation_status,
-        "started_on": invocation.get("started_on"),
-        "completed_on": invocation.get("completed_on"),
-    }
+    if invocation_status == InvocationStatus.FAILED.value:
+        response_body.update(failure_reason=INVALID_IMAGE_FORMAT)
 
     return {
         "statusCode": HTTPStatus.OK,
