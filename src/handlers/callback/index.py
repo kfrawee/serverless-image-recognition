@@ -14,14 +14,12 @@ from pyimage.utils.helpers import send_callback
 main_table = MainTable()
 
 
-
 @lambda_decorator
 def handler(event, _):
 
-    logger.debug("+"*20)
+    logger.debug("+" * 20)
 
     # try:
-        # send_callback(callback_url, callback_data)
-
+    # send_callback(callback_url, callback_data)
 
     return {}
