@@ -31,10 +31,12 @@ def handler(event, _):
 
     image_key = event.get("Records", [])[0].get("s3", {}).get("object", {}).get("key")
     blob_id = image_key.split("/")[-1]
+    now = datetime.now(timezone.utc)
 
     main_table.update_invocation(
         blob_id=blob_id,
         invocation_status=InvocationStatus.IN_PROGRESS.value,
+        started_on=str(now),
     )
 
     labels = label_image(image_key)

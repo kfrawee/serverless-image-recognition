@@ -37,10 +37,10 @@ def dump_json_body_and_catch_unexpected_errors(
                         )
                     return response
                 except Exception:
-                    logger.error(f"Something went wrong: {traceback.format_exc()}")
+                    logger.error(f"Unexpected Error: {traceback.format_exc()}")
                     return {
                         "statusCode": HTTPStatus.INTERNAL_SERVER_ERROR,
-                        "body": json.dumps({"message": "Internal Server Error"}),
+                        "body": json.dumps({"message": "Internal server error"}),
                     }
 
             return wrapper
@@ -102,10 +102,10 @@ def lambda_decorator(handler_func):
                             {"message": "Request body is not a valid JSON."}
                         ),
                     }
-            else:
-                response = cors_headers(
-                    dump_json_body_and_catch_unexpected_errors(load_json_body(handler))
-                )(event, context)
+
+            response = cors_headers(
+                dump_json_body_and_catch_unexpected_errors(load_json_body(handler))
+            )(event, context)
 
             if headers := response.get("headers"):
                 headers[

@@ -4,7 +4,7 @@ Helper functions for interacting with dynamodb service
 
 import os
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 
 import boto3
 
@@ -52,7 +52,8 @@ class MainTable:
         self,
         blob_id: str,
         invocation_status: InvocationStatus,
-        started_on=str(datetime.now()),
+        requested_on=str(datetime.now(timezone.utc)),
+        started_on=None,
         completed_on=None,
         **data,
     ):
@@ -60,6 +61,7 @@ class MainTable:
             "pk": blob_id,
             "sk": blob_id,
             "invocation_status": invocation_status,
+            "requested_on": requested_on,
             "started_on": started_on,
             "completed_on": completed_on,
             **data,
