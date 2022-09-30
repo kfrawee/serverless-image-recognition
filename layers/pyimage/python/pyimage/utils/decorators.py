@@ -102,10 +102,10 @@ def lambda_decorator(handler_func):
                             {"message": "Request body is not a valid JSON."}
                         ),
                     }
-            else:
-                response = cors_headers(
-                    dump_json_body_and_catch_unexpected_errors(load_json_body(handler))
-                )(event, context)
+
+            response = cors_headers(
+                dump_json_body_and_catch_unexpected_errors(load_json_body(handler))
+            )(event, context)
 
             if headers := response.get("headers"):
                 headers[

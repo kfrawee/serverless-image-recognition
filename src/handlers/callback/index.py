@@ -31,11 +31,10 @@ def handler(event, _):
         return {}
 
     try:
+        invocation_status = invocation.get("invocation_status")
         callback_data = create_or_get_blob_response_schema.dump(invocation)
+
         response = send_callback(callback_url, callback_data)
     except (HTTPError, ConnectionError, ConnectTimeout) as e:
-        logger.error(
-            f"Sending request to '{callback_url}' failed: '{e}'.\n"
-            f"Status code: '{response.status_code}' and response: '{response.text}'"
-        )
+        logger.error(f"Sending request to '{callback_url}' failed: '{e}'.")
     return {}
