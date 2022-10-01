@@ -1,4 +1,4 @@
-# org: kfrawee # will requires serverless login while calling $ serverless deploy 
+# org: kfrawee # will requires serverless login while calling $ serverless deploy
 app: image-recognition
 service: image-recognition
 
@@ -45,10 +45,10 @@ provider:
             - "s3:DeleteObject"
           Resource:
             Fn::Join:
-            - ""
-            - - "arn:aws:s3:::"
-              - "Ref": "MainBucket"
-              - "/*"
+              - ""
+              - - "arn:aws:s3:::"
+                - "Ref": "MainBucket"
+                - "/*"
         - Effect: "Allow"
           Action:
             - "dynamodb:GetItem"
@@ -58,12 +58,12 @@ provider:
             - "dynamodb:Query"
             - "dynamodb:Scan"
           Resource:
-            - Fn::GetAtt: 
-              - MainTable
-              - Arn
-            - Fn::GetAtt: 
-              - MainTable
-              - StreamArn
+            - Fn::GetAtt:
+                - MainTable
+                - Arn
+            - Fn::GetAtt:
+                - MainTable
+                - StreamArn
         - Effect: "Allow"
           Action:
             - "rekognition:DetectLabels"
@@ -76,8 +76,7 @@ package:
   excludeDevDependencies: true
   patterns:
     - "!requirements/**"
-    - "!state_machines/**"
-    - "!test/**"
+    - "!tests/**"
     - "!README.md"
     - "!requirements.txt"
     - "!node_modules/**"
@@ -92,7 +91,7 @@ functions:
       - http:
           path: /blobs
           method: POST
-  
+
   getBlob:
     handler: src.handlers.blobs.index.get_blob
     description: Get blob labeling status.
