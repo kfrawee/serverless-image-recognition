@@ -1,4 +1,4 @@
-org: kfrawee
+# org: kfrawee # will requires serverless login while calling $ serverless deploy 
 app: image-recognition
 service: image-recognition
 
