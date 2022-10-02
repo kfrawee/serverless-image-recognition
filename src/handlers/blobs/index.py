@@ -95,7 +95,9 @@ def get_blob(event, _):
     if not (invocation := main_table.get_invocation(blob_id)):
         return {
             "statusCode": HTTPStatus.NOT_FOUND,
-            "body": {"message": f"Invocation with blob_id '{blob_id}' was not found."},
+            "body": {
+                "message": f"Invocation with the blob_id '{blob_id}' was not found."
+            },
         }
 
     invocation_status = invocation.get("invocation_status")

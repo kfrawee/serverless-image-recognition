@@ -1,7 +1,7 @@
 """
 Handler for labeling image once it is uploaded to s3
 """
-
+from http import HTTPStatus
 from datetime import datetime, timezone
 
 
@@ -59,4 +59,6 @@ def handler(event, _):
 
     # delete the uploaded object, no need to keep it in s3
     delete_object(image_key)
-    return {}
+    return {
+        "statusCode": HTTPStatus.OK,
+    }
