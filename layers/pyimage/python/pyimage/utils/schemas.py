@@ -23,8 +23,6 @@ class CreateOrGetBlobResponseSchema(Schema):
     upload_url = fields.URL()
     callback_url = fields.URL()
 
-    message = fields.String()
-
     _links = fields.Dict()
 
     class Meta:

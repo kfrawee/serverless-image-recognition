@@ -24,8 +24,6 @@ create_or_get_blob_response_schema = CreateOrGetBlobResponseSchema()
 
 main_table = MainTable()
 
-UPLOAD_MESSAGE = "Use 'upload_url' to upload your image."
-
 
 @lambda_decorator
 def create_blob(event, _):
@@ -66,7 +64,6 @@ def create_blob(event, _):
         "invocation_status": invocation_status,
         "requested_on": now,
         "upload_url": upload_url,
-        "message": UPLOAD_MESSAGE,
         "_links": {
             "status": f"https://{event.get('requestContext').get('domainName')}/"
             f"{event.get('requestContext').get('stage')}/blobs/{blob_id}",
