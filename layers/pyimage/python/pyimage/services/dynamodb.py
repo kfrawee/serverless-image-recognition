@@ -3,13 +3,12 @@ Helper functions for interacting with dynamodb service
 """
 
 import os
-import logging
 from datetime import datetime, timezone
 
 import boto3
 
 from ..utils.invocation_statuses import InvocationStatus
-from ..utils.constants import DYNAMODB_RESERVED_WORDS
+from ..utils.constrains import DYNAMODB_RESERVED_WORDS
 
 MAIN_TABLE = os.getenv("MAIN_TABLE")
 dynamodb_client = boto3.resource("dynamodb")
