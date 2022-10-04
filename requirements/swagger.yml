@@ -1,0 +1,213 @@
+openapi: 3.0.3
+info:
+  title: Image Recognition API ⚡🔎
+  description: A simple API for the recognition of images using AWS Rekognition on the back-end.
+  version: 2.0.0
+  contact:
+    name: kfrawee
+    url: https://github.com/kfrawee
+servers:
+  - url: https://1234xxx.execute-api.us-east-1.amazonaws.com/dev
+paths:
+  /blobs:
+    post:
+      summary: Create Blob creates a unique `blob_id` and generates a pre-signed url to upload the image.
+      tags:
+        - Blobs
+      operationId: createBlob
+      requestBody:
+        description: You can optionally add a `callback_url` to receive invocation status update.
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                callback_url:
+                  description: callback_url to receive invocation status update.
+                  type: string
+                  format: url
+                  example: https://webhook.site/41d5eaf6-3213-4dfe-863d-0f3436dc461c
+      responses:
+        "201":
+          description: Blob created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  blob_id:
+                    description: The blob id.
+                    type: string
+                    format: uuid
+                    example: 01GEJ202KZ7PEBZ36X401352AE
+                  invocation_status:
+                    description: Represents current invocation status.
+                    type: string
+                    enum:
+                      - ACTION_REQUIRED
+                      - IN_PROGRESS
+                      - COMPLETED
+                      - FAILED
+                    example: ACTION_REQUIRED
+                  requested_on:
+                    description: Invocation initiation timestamp.
+                    type: string
+                    format: datetime
+                    example: 2022-10-04 17:51:46.815566+00:00
+                  upload_url:
+                    description: Pre-signed Url to upload the image.
+                    type: string
+                    format: url
+                    example: https://s3.amazonaws.com/image-recognition-bucket-dev/blobs/01GEJ202KZ7PEBZ36X401352AE/01GEJ202KZ7PEBZ36X401352AE?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=...
+                  callback_url:
+                    description: The callback_url if provided in the request.
+                    type: string
+                    format: url
+                    example: https://webhook.site/41d5eaf6-3213-4dfe-863d-0f3436dc461c
+                  _links:
+                    type: object
+                    description: An object contains useful links of the invocation. i.e., retrieve invocation status.
+              examples:
+                With callback:
+                  value:
+                    blob_id: 01GEJ56WD2GGG7YJVAK5B7GD4F
+                    invocation_status: ACTION_REQUIRED
+                    requested_on: "2022-10-04 18:47:55.554314+00:00"
+                    upload_url: https://s3.amazonaws.com/image-recognition-bucket-dev/blobs/01GEJ56WD2GGG7YJVAK5B7GD4F/01GEJ56WD2GGG7YJVAK5B7GD4F?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIA5PALOEV6HI7NW4GD%2F20221004%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20221004T184755Z&X-Amz-Expires=600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=FwoGZXIvYXdzEBwaDCmihS97e9yDZ94AEiKsAt%2FyAzJiVrTmY0Bcck3mLWZwK5eD2lOy4M4QGcE9t1AiLakESRL2BTNbzl3v6M5A4YWTbXA56i6rHFUe64mZ2RDVsTPD0pTgRM5m4OPDjByLB2y%2BALmZ%2BQUluDzxLU44RWlBjU4yIAuxyThadfCtbGS%2FrbD5ze34Pb83BKNlubjVKOrmSMCFVfwke5tcjk7VdCU9zCJzUJOlunReDPirMpaNNdJAWaWZ6aiyMW2tzIUYpsXb73JL3P5kUAS87FPShY%2B3gfH%2BeMp%2Bm8a6Yyl4INsUR%2FJJ08bPWYV%2BlQY1ORlyMrmvLYUf6dWNO5ESA4kXKSkPWoXppQdGRQX2eXdcniD5jZgMvvFMOdYKUZ6EEwFm7B3IzMriOEStaYlb6gAFXW8wmS%2BT5m3tKsLHZija%2F%2FGZBjItQh9wvo8kclYIChAk7GRhwozll1h3llYMSV%2FQhdnonMT2KMgskVwzhRHQNERs&X-Amz-Signature=6ba622267602d8e0b453703668d77d3d7c75fa14d18e832fa9816438bc9914ce
+                    callback_url: https://webhook.site/41d5eaf6-3213-4dfe-863d-0f3436dc461c
+                    _links:
+                      status: https://0w49fkj9t4.execute-api.us-east-1.amazonaws.com/dev/blobs/01GEJ56WD2GGG7YJVAK5B7GD4F
+                Without callback:
+                  value:
+                    blob_id: 01GEJ56WD2GGG7YJVAK5B7GD4F
+                    invocation_status: ACTION_REQUIRED
+                    requested_on: "2022-10-04 18:47:55.554314+00:00"
+                    upload_url: https://s3.amazonaws.com/image-recognition-bucket-dev/blobs/01GEJ56WD2GGG7YJVAK5B7GD4F/01GEJ56WD2GGG7YJVAK5B7GD4F?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIA5PALOEV6HI7NW4GD%2F20221004%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20221004T184755Z&X-Amz-Expires=600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=FwoGZXIvYXdzEBwaDCmihS97e9yDZ94AEiKsAt%2FyAzJiVrTmY0Bcck3mLWZwK5eD2lOy4M4QGcE9t1AiLakESRL2BTNbzl3v6M5A4YWTbXA56i6rHFUe64mZ2RDVsTPD0pTgRM5m4OPDjByLB2y%2BALmZ%2BQUluDzxLU44RWlBjU4yIAuxyThadfCtbGS%2FrbD5ze34Pb83BKNlubjVKOrmSMCFVfwke5tcjk7VdCU9zCJzUJOlunReDPirMpaNNdJAWaWZ6aiyMW2tzIUYpsXb73JL3P5kUAS87FPShY%2B3gfH%2BeMp%2Bm8a6Yyl4INsUR%2FJJ08bPWYV%2BlQY1ORlyMrmvLYUf6dWNO5ESA4kXKSkPWoXppQdGRQX2eXdcniD5jZgMvvFMOdYKUZ6EEwFm7B3IzMriOEStaYlb6gAFXW8wmS%2BT5m3tKsLHZija%2F%2FGZBjItQh9wvo8kclYIChAk7GRhwozll1h3llYMSV%2FQhdnonMT2KMgskVwzhRHQNERs&X-Amz-Signature=6ba622267602d8e0b453703668d77d3d7c75fa14d18e832fa9816438bc9914ce
+                    _links:
+                      status: https://0w49fkj9t4.execute-api.us-east-1.amazonaws.com/dev/blobs/01GEJ56WD2GGG7YJVAK5B7GD4F
+
+        "500":
+          $ref: "#/components/responses/500InternalServerError"
+
+  /blobs/{blob_id}:
+    get:
+      summary: Retrieve invocation status by `blob_id`
+      operationId: retriveStatus
+      tags:
+        - Blobs
+      parameters:
+        - name: blob_id
+          in: path
+          required: true
+          description: The blob_id to retrieve status.
+          schema:
+            type: string
+            format: ulid
+            example: 01GEJ56WD2GGG7YJVAK5B7GD4F
+
+      responses:
+        "200":
+          description: OK.
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  properties:
+                    blob_id:
+                      description: The blob id.
+                      type: string
+                      format: uuid
+                      example: 01GEJ202KZ7PEBZ36X401352AE
+                    invocation_status:
+                      description: Represents current invocation status.
+                      type: string
+                      enum:
+                        - ACTION_REQUIRED
+                        - IN_PROGRESS
+                        - COMPLETED
+                        - FAILED
+                      example: COMPLETED
+                    failure_reason:
+                      description: Failure reason if the invocation (labeling) has failed.
+                      type: string
+                      example: Detecting labels failed. Invalid image format.
+                    requested_on:
+                      description: Invocation initiation timestamp.
+                      type: string
+                      format: datetime
+                      example: 2022-10-04 17:51:46.815566+00:00
+                    started_on:
+                      description: Invocation starting (image labeling) timestamp.
+                      type: string
+                      format: datetime
+                      example: 2022-10-04 18:54:15.074922+00:00
+                    completed_on:
+                      description: Invocation completion (image labeling) timestamp.
+                      type: string
+                      format: datetime
+                      example: 2022-10-04 18:54:15.589035+00:00
+                    labels:
+                      type: array
+                    callback_url:
+                      description: The callback_url if provided in the request.
+                      type: string
+                      format: url
+                      example: https://webhook.site/41d5eaf6-3213-4dfe-863d-0f3436dc461c
+              examples:
+                Completed:
+                  value:
+                    blob_id: 01GEJ56WD2GGG7YJVAK5B7GD4F
+                    invocation_status: COMPLETED
+                    requested_on: "2022-10-04 18:47:55.554314+00:00"
+                    started_on: "2022-10-04 18:54:15.074922+00:00"
+                    completed_on: "2022-10-04 18:54:15.589035+00:00"
+                    labels:
+                      - Car
+                      - Sports Car
+                      - Coupe
+                      - Tire
+                      - Wheel
+                    callback_url: https://webhook.site/41d5eaf6-3213-4dfe-863d-0f3436dc461c
+                Failed:
+                  value:
+                    blob_id: 01GEJ5ZBDBM44797PEZVQBXE5S
+                    invocation_status: FAILED
+                    failure_reason: Detecting labels failed. Invalid image format.
+                    requested_on: "2022-10-04 19:01:17.355389+00:00"
+                    started_on: "2022-10-04 19:01:36.236840+00:00"
+                    completed_on: "2022-10-04 19:01:36.448917+00:00"
+                    callback_url: https://webhook.site/41d5eaf6-3213-4dfe-863d-0f3436dc461c
+
+        "404":
+          description: Blob id was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Message.
+              example:
+                message: "Invocation with the blob_id '01GEJ5ZBDBM44797PEZVQBXE5X' was not found."
+
+        "500":
+          $ref: "#/components/responses/500InternalServerError"
+
+components:
+  responses:
+    500InternalServerError:
+      description: Internal Server Error.
+      content:
+        application/json:
+          schema:
+            type: object
+            description: Error response object.
+            properties:
+              message:
+                type: string
+                description: Error message.
+          example:
+            message: "Internal Server Error"

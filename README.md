@@ -33,6 +33,8 @@ A simple API for the recognition of images using AWS Rekognition on the back-end
 - Deploy the stack:
     ```sh
     $ serverless deploy
+
+    ✔ Service deployed to stack image-recognition-dev
     ```
 - After deployment is successful, you can check the deployed stack details using:
     ```sh
@@ -142,5 +144,5 @@ To remove all the services and resources:
 ```sh
 $ serverless remove
 
-Serverless: Stack delete finished...
+✔ Service image-recognition has been successfully removed
 ```
