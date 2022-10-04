@@ -102,7 +102,7 @@ A simple API for the recognition of images using AWS Rekognition on the back-end
 - Postman:
     <br>
     <p align="center">
-    <img src="requirements/images/02_retrieve_status.png" title="Upload image" alt="Upload image" width=100%><br>
+    <img src="requirements/images/02_upload_image.png" title="Upload image" alt="Upload image" width=100%><br>
     <b>Upload image</b>
     </p>
 
