@@ -59,6 +59,5 @@ def handler(event, _):
         )
     except (HTTPError, ConnectionError, ConnectTimeout) as e:
         logger.error(f"Sending request to '{callback_url}' failed: '{e}'.")
-    return {
-        "statusCode": HTTPStatus.OK,
-    }
+    
+    return event

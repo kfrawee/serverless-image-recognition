@@ -59,6 +59,5 @@ def handler(event, _):
 
     # delete the uploaded object, no need to keep it in s3
     delete_object(image_key)
-    return {
-        "statusCode": HTTPStatus.OK,
-    }
+    
+    return event
