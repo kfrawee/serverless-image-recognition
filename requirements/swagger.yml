@@ -150,6 +150,10 @@ paths:
                       example: 2022-10-04 18:54:15.589035+00:00
                     labels:
                       type: array
+                      items:
+                        type: string
+                        description: Detected label.
+                        example: Car
                     callback_url:
                       description: The callback_url if provided in the request.
                       type: string
