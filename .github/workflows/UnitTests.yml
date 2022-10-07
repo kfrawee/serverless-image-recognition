@@ -1,5 +1,5 @@
 # REF: https://github.com/okeeffed/hello-pytest-github-actions/blob/main/.github/workflows/pytest.yml
-name: Unit Tests
+name: Unit-Tests
 
 on:
   pull_request:

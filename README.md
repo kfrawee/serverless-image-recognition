@@ -1,7 +1,9 @@
 # Serverless Image Recognition v2⚡🔎 
 A simple API for the images recognition using AWS Rekognition on the back-end. Using the Serverless framework for describing infrastructure.
-[![serverless](http://public.serverless.com/badges/v3.svg)](http://www.serverless.com)  [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/) [![Awesome](https://awesome.re/badge.svg)](https://github.com/kfrawee/) ![Tests](https://github.com/github/docs/actions/workflows/UnitTests.yml/badge.svg)
-
+[![serverless](http://public.serverless.com/badges/v3.svg)](http://www.serverless.com)  
+[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/) 
+[![Awesome](https://awesome.re/badge.svg)](https://github.com/kfrawee/) 
+<a href="https://github.com/psf/black/actions"><img alt="Actions Status" src="https://github.com/kfrawee/serverless-image-recognition/workflows/Unit-Tests/badge.svg"></a>
 ## **Overview:**
 A simple API for the recognition of images using AWS Rekognition on the back-end. The API stores an image, does image recognition and labeling on it and returns results to the user in two ways, with a provided `callback` or a using `GET /blobs/{blob_id}` endpoint.
 
