@@ -35,4 +35,4 @@ jobs:
           pip install -r requirements_test.txt
       - name: Run Pytest
         run: |
-          pytest --cov=. -n=10 tests/
+          pytest --cov=. -n 10 tests/
