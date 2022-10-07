@@ -32,7 +32,7 @@ jobs:
       - name: Install dependencies
         # if: steps.cache-pipenv.outputs.cache-hit != 'true'
         run: |
-          pip install -t requirements_test.txt
+          pip install -t ./requirements_test.txt
       - name: Run tests suite
         run: |
           pytest --cove=. tests/
