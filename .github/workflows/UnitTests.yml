@@ -29,10 +29,10 @@ jobs:
       #     path: ~/.local/share/virtualenvs
       #     key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
 
-      - name: Install dependencies
+      - name: Install test dependencies
         # if: steps.cache-pipenv.outputs.cache-hit != 'true'
         run: |
           pip install -r requirements_test.txt
-      - name: Run tests suite
+      - name: Run Pytest
         run: |
-          pytest --cove=. tests/
+          pytest --cov=. -n=10 tests/
