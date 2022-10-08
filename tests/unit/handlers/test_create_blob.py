@@ -11,7 +11,7 @@ from moto import mock_dynamodb, mock_s3
 @pytest.mark.usefixtures("set_environment_variables")
 @mock_dynamodb
 @mock_s3
-class TestGetBlob(TestCase):
+class TestCreateBlob(TestCase):
     def setUp(self):
         from utils import create_table, create_bucket
 
@@ -25,7 +25,7 @@ class TestGetBlob(TestCase):
                 "domainName": "TEST",
             },
             "resource": "/TEST",
-            "body": json.dumps({"callback_url": "https://www.example.com/abc-123-xyz"}),
+            "body": json.dumps({"callback_url": "https://www.example.com/callback"}),
         }
 
         self.event_invalid_body = {
