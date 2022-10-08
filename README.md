@@ -2,9 +2,9 @@
 
 [![serverless](http://public.serverless.com/badges/v3.svg)](http://www.serverless.com)
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/) 
-[![Awesome](https://awesome.re/badge.svg)](https://github.com/kfrawee/)
 ![Unit-Tests](https://github.com/kfrawee/serverless-image-recognition/workflows/Unit-Tests/badge.svg)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/kfrawee/serverless-image-recognition/issues)
+[![Awesome](https://awesome.re/badge.svg)](https://github.com/kfrawee/)
 
 
 >A simple API for the images recognition using AWS Rekognition on the back-end. Using the Serverless framework for describing infrastructure.
@@ -144,7 +144,7 @@ Response:
 ```
 
 ## **Cleaning:**
-To remove all the services and resources:
+To remove the stack and all the services and resources:
 
 ```sh
 $ serverless remove
