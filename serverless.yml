@@ -75,11 +75,12 @@ provider:
 package:
   excludeDevDependencies: true
   patterns:
-    - "!requirements/**"
-    - "!tests/**"
-    - "!README.md"
-    - "!requirements.txt"
     - "!node_modules/**"
+    - "!tests/**"
+    - "!requirements/**"
+    - "!requirements.txt"
+    - "!requirements_test.txt"
+    - "!README.md"
 
 functions:
   createBlob:
