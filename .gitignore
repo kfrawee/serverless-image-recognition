@@ -2,5 +2,7 @@
 node_modules
 __pycache__/
 
-# .coverage
+.vscode
+
+.coverage
 # .coveragerc

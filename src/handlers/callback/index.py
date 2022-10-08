@@ -40,9 +40,7 @@ def handler(event, _):
     invocation = main_table.get_invocation(blob_id)
 
     if not (callback_url := invocation.get("callback_url")):
-        return {
-            "statusCode": HTTPStatus.OK,
-        }
+        return event
 
     try:
         callback_payload = {
