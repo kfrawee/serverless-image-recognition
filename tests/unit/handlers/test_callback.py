@@ -47,7 +47,7 @@ class TestCallBack(TestCase):
     def test_no_callback(self, *args):
         response = self.handler(self.event, self.lambda_context)
 
-        assert response
+        assert response == self.event
 
     @mock.patch(
         "src.handlers.callback.index.main_table.get_invocation",
@@ -63,7 +63,7 @@ class TestCallBack(TestCase):
     def test_callback_failed_invocation(self, *args):
         response = self.handler(self.event, self.lambda_context)
 
-        assert response
+        assert response == self.event
 
     @mock.patch(
         "src.handlers.callback.index.main_table.get_invocation",
@@ -79,4 +79,4 @@ class TestCallBack(TestCase):
     def test_callback_completed_invocation(self, *args):
         response = self.handler(self.event, self.lambda_context)
 
-        assert response
+        assert response == self.event
