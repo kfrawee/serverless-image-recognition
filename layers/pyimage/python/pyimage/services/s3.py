@@ -38,5 +38,5 @@ def generate_presigned_url(blob_id: str, Bucket=MAIN_BUCKET, expiration=60 * 10)
 
 
 def delete_object(object_key: str):
-    s3_client.delete_object(Bucket=MAIN_BUCKET, Key=object_key)
-    return
+    """Delete object from S3"""
+    return s3_client.delete_object(Bucket=MAIN_BUCKET, Key=object_key)
