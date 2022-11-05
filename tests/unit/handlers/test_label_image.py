@@ -55,7 +55,7 @@ class TestLabelImage(TestCase):
     def test_label_image_completed(self, *args):
         response = self.handler(self.event, self.lambda_context)
 
-        assert response
+        assert response == self.event
 
     @mock.patch(
         "src.handlers.label_images.index.main_table.update_invocation",
@@ -72,4 +72,4 @@ class TestLabelImage(TestCase):
     def test_label_image_failed(self, *args):
         response = self.handler(self.event, self.lambda_context)
 
-        assert response
+        assert response == self.event

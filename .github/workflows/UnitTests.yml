@@ -1,12 +1,12 @@
 # REF: https://github.com/okeeffed/hello-pytest-github-actions/blob/main/.github/workflows/pytest.yml
-name: Unit-Tests
+name: Tests
 
 on:
   pull_request:
     types: ["opened", "edited", "reopened", "synchronize"]
 
 jobs:
-  Unit-Tests:
+  Tests:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
