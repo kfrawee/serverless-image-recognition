@@ -6,7 +6,7 @@ on:
     types: ["opened", "edited", "reopened", "synchronize"]
 
 jobs:
-  Tests:
+  Unit-Tests:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
