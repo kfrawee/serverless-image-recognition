@@ -1,18 +1,15 @@
 """
 Handler for labeling image once it is uploaded to s3
 """
-from http import HTTPStatus
 from datetime import datetime, timezone
+from http import HTTPStatus
 
-
-from pyimage.utils.decorators import lambda_decorator
-from pyimage.utils.invocation_statuses import InvocationStatus
-from pyimage.utils.helpers import logger
-
-from pyimage.services.s3 import delete_object
 from pyimage.services.dynamodb import MainTable
 from pyimage.services.rekognition import label_image
-
+from pyimage.services.s3 import delete_object
+from pyimage.utils.decorators import lambda_decorator
+from pyimage.utils.helpers import logger
+from pyimage.utils.invocation_statuses import InvocationStatus
 
 main_table = MainTable()
 

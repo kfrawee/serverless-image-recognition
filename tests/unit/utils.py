@@ -1,4 +1,5 @@
 import os
+
 import boto3
 
 REGION = os.getenv("REGION")

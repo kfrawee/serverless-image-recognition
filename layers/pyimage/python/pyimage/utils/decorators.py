@@ -5,13 +5,12 @@ https://github.com/dschep/lambda-decorators/blob/master/lambda_decorators.py
 """
 
 import json
+import traceback
 from functools import wraps
 from http import HTTPStatus
 from json import JSONDecodeError
-import traceback
 
 from lambda_decorators import cors_headers
-
 from pyimage.utils.helpers import logger
 
 
