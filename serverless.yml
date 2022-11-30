@@ -14,13 +14,11 @@ layers:
       Lambda layer contains helper functions for aws services 
       and other common functions to avoid repeating the code.
     compatibleRuntimes:
-      - python3.8
       - python3.9
     # log-extension: # TODO
     #   path: layers/logs-extension
     #   name: logs-extension
     #   compatibleRuntimes:
-    #     - python3.8
     #     - python3.9
     #   package:
     #     include:
