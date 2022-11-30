@@ -15,6 +15,16 @@ layers:
       and other common functions to avoid repeating the code.
     compatibleRuntimes:
       - python3.8
+      - python3.9
+    # log-extension: # TODO
+    #   path: layers/logs-extension
+    #   name: logs-extension
+    #   compatibleRuntimes:
+    #     - python3.8
+    #     - python3.9
+    #   package:
+    #     include:
+    #       - ./**
 
 custom:
   pythonRequirements:
@@ -24,7 +34,8 @@ custom:
 
 provider:
   name: aws
-  runtime: python3.8
+  runtime: python3.9
+  architecture: arm64
   region: ${opt:region, 'us-east-1'}
   stage: ${opt:stage, 'dev'}
   timeout: 29
