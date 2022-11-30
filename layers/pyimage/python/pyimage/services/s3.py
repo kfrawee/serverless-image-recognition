@@ -2,8 +2,8 @@
 Helper functions for interacting with s3 service
 """
 
-import os
 import logging
+import os
 
 import boto3
 from botocore.exceptions import ClientError

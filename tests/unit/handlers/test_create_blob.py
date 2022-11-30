@@ -13,7 +13,7 @@ from moto import mock_dynamodb, mock_s3
 @mock_s3
 class TestCreateBlob(TestCase):
     def setUp(self):
-        from utils import create_table, create_bucket
+        from utils import create_bucket, create_table
 
         self.MainTable = create_table()
         self.MainBucket = create_bucket()

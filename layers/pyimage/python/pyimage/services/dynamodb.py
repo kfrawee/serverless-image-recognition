@@ -7,8 +7,8 @@ from datetime import datetime, timezone
 
 import boto3
 
-from ..utils.invocation_statuses import InvocationStatus
 from ..utils.constrains import DYNAMODB_RESERVED_WORDS
+from ..utils.invocation_statuses import InvocationStatus
 
 MAIN_TABLE = os.getenv("MAIN_TABLE")
 dynamodb_client = boto3.resource("dynamodb")

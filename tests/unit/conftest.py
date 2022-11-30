@@ -1,7 +1,7 @@
 import os
+import uuid
 from dataclasses import dataclass
 from unittest import mock
-import uuid
 
 import pytest
 

@@ -2,11 +2,11 @@
 Helper functions for interacting with rekognition service
 """
 
-import os
 import logging
+import os
+
 import boto3
 from botocore.exceptions import ClientError
-
 
 MAIN_BUCKET = os.getenv("MAIN_BUCKET")
 rekognition_client = boto3.client("rekognition")
