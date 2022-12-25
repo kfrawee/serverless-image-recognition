@@ -96,7 +96,7 @@ functions:
     handler: src.handlers.blobs.index.create_blob
     description: Generate a blob_id with a presigned url to be used to upload the image.
     layers:
-      - Ref: PyimageLambdaLayer
+      - !Ref PyimageLambdaLayer
     events:
       - http:
           path: /blobs
@@ -106,7 +106,7 @@ functions:
     handler: src.handlers.blobs.index.get_blob
     description: Get blob labeling status.
     layers:
-      - Ref: PyimageLambdaLayer
+      - !Ref PyimageLambdaLayer
     events:
       - http:
           path: /blobs/{blob_id}
@@ -116,7 +116,7 @@ functions:
     handler: src.handlers.label_images.index.handler
     description: Send the uploaded image to Rekognition to detect labels.
     layers:
-      - Ref: PyimageLambdaLayer
+      - !Ref PyimageLambdaLayer
     events:
       - s3:
           bucket: ${self:provider.environment.MAIN_BUCKET}
@@ -127,7 +127,7 @@ functions:
     handler: src.handlers.callback.index.handler
     description: Send labels to callback url if provided.
     layers:
-      - Ref: PyimageLambdaLayer
+      - !Ref PyimageLambdaLayer
     events:
       - stream:
           type: dynamodb
